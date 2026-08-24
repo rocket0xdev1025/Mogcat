@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mogcat ($mogcat) — The Inevitable Cat on Solana</title>
+  <meta name="description" content="A thousand epochs ago it was just a funny experiment. A thousand epochs from now everyone will pretend it was always obvious. $mogcat on Solana." />
+  <meta name="theme-color" content="#08060F" />
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="preload" as="image" href="logo.png" />
+  <link rel="preload" as="image" href="banner.png" />
+  <meta property="og:title" content="mogcat ($mogcat)" />
+  <meta property="og:description" content="A thousand epochs ago it was just a funny experiment. A thousand epochs from now everyone will pretend it was always obvious." />
+  <meta property="og:image" content="banner.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            void: { DEFAULT: "#08060F", 800: "#120E1C", 700: "#1A1528" },
+            sol: { purple: "#9945FF", green: "#14F195", mint: "#00FFA3" },
+            ginger: { 300: "#F3D5B0", 400: "#E8B86D", 500: "#E0A85A", 600: "#C07A32", 700: "#8B5A2B" },
+            cream: { DEFAULT: "#F6E7D0", dim: "#D9C4A4" },
+            visor: { cyan: "#2EE6FF", magenta: "#E040FB", blue: "#6B7CFF" },
+          },
+          fontFamily: {
+            display: ['"Bebas Neue"', "Impact", "sans-serif"],
+            epoch: ["Cinzel", "Georgia", "serif"],
+            sans: ["Outfit", "system-ui", "sans-serif"],
+            mono: ['"IBM Plex Mono"', "ui-monospace", "monospace"],
+          },
+          boxShadow: {
+            visor: "0 0 32px rgba(46,230,255,0.35), 0 0 64px rgba(224,64,251,0.18)",
+            buy: "0 0 0 1px rgba(20,241,149,0.45), 0 10px 40px rgba(20,241,149,0.25)",
+            card: "0 20px 50px rgba(0,0,0,0.45), inset 0 1px 0 rgba(246,231,208,0.08)",
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --ca: "TBA";
+      --void: #08060F;
+      --sol-purple: #9945FF;
+      --sol-green: #14F195;
+      --ginger: #E0A85A;
+      --cream: #F6E7D0;
+      --cyan: #2EE6FF;
+      --magenta: #E040FB;
+    }
+
+    html { background: var(--void); }
+
+    body {
+      font-family: Outfit, system-ui, sans-serif;
+      background-color: var(--void);
+      color: var(--cream);
+      overflow-x: hidden;
+    }
+
+    ::selection { background: #9945FF; color: #F6E7D0; }
+
+    /* Solana narrative void — purple/green nebula */
+    .sol-void {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 50% at 8% -8%, rgba(153, 69, 255, 0.32), transparent 58%),
+        radial-gradient(ellipse 70% 45% at 100% 0%, rgba(20, 241, 149, 0.14), transparent 52%),
+        radial-gradient(ellipse 50% 40% at 70% 100%, rgba(46, 230, 255, 0.10), transparent 55%),
+        radial-gradient(ellipse 40% 30% at 20% 90%, rgba(224, 64, 251, 0.10), transparent 50%),
+        linear-gradient(180deg, #0C0916 0%, #08060F 40%, #05040A 100%);
+    }
+
+    .paws {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.07;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='%23E0A85A'%3E%3Cellipse cx='52' cy='58' rx='11' ry='13'/%3E%3Cellipse cx='38' cy='42' rx='6' ry='8'/%3E%3Cellipse cx='50' cy='34' rx='6' ry='8'/%3E%3Cellipse cx='64' cy='36' rx='6' ry='8'/%3E%3Cellipse cx='72' cy='48' rx='6' ry='8'/%3E%3Cellipse cx='128' cy='128' rx='11' ry='13' transform='rotate(28 128 128)'/%3E%3Cellipse cx='114' cy='114' rx='6' ry='8' transform='rotate(28 114 114)'/%3E%3Cellipse cx='126' cy='104' rx='6' ry='8' transform='rotate(28 126 104)'/%3E%3Cellipse cx='140' cy='108' rx='6' ry='8' transform='rotate(28 140 108)'/%3E%3Cellipse cx='146' cy='122' rx='6' ry='8' transform='rotate(28 146 122)'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .grain::after {
+      content: "";
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      opacity: 0.055;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+    }
+
+    .page { position: relative; z-index: 1; }
+
+    /* Cat paw cursor */
+    html, body, a, button, input, [role="button"], * {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cellipse cx='16' cy='20' rx='7' ry='8' fill='%23E0A85A'/%3E%3Cellipse cx='7' cy='12' rx='3.2' ry='4.2' fill='%23E0A85A'/%3E%3Cellipse cx='13' cy='7.5' rx='3.2' ry='4.2' fill='%23E0A85A'/%3E%3Cellipse cx='20.5' cy='7.5' rx='3.2' ry='4.2' fill='%23E0A85A'/%3E%3Cellipse cx='26' cy='13' rx='3.2' ry='4.2' fill='%23E0A85A'/%3E%3C/svg%3E") 8 8, auto;
+    }
+
+    .visor-bar {
+      height: 3px;
+      background: linear-gradient(90deg, #2EE6FF, #6B7CFF, #9945FF, #E040FB, #14F195, #2EE6FF);
+      background-size: 240% 100%;
+      animation: visorShift 7s linear infinite;
+    }
+
+    @keyframes visorShift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 240% 50%; }
+    }
+
+    .visor-text {
+      background: linear-gradient(90deg, #2EE6FF, #F3D5B0, #E040FB, #14F195, #2EE6FF);
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: visorShift 8s linear infinite;
+    }
+
+    .gold-text {
+      background: linear-gradient(180deg, #FFF6EA 0%, #E8B86D 55%, #C07A32 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .logo-orbit {
+      position: absolute;
+      inset: -18px;
+      border-radius: 999px;
+      border: 1px dashed rgba(46, 230, 255, 0.45);
+      animation: spin 22s linear infinite;
+    }
+    .logo-orbit.two {
+      inset: -32px;
+      border-color: rgba(224, 64, 251, 0.28);
+      animation-duration: 34s;
+      animation-direction: reverse;
+    }
+    .logo-orbit.three {
+      inset: -48px;
+      border-color: rgba(20, 241, 149, 0.18);
+      animation-duration: 48s;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .logo-glow {
+      filter: drop-shadow(0 0 18px rgba(46, 230, 255, 0.55)) drop-shadow(0 0 40px rgba(224, 64, 251, 0.28));
+      animation: bob 4.4s ease-in-out infinite;
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .hud-corner {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      border-color: rgba(46, 230, 255, 0.7);
+      pointer-events: none;
+    }
+    .hud-tl { top: 12px; left: 12px; border-top: 2px solid; border-left: 2px solid; }
+    .hud-tr { top: 12px; right: 12px; border-top: 2px solid; border-right: 2px solid; }
+    .hud-bl { bottom: 12px; left: 12px; border-bottom: 2px solid; border-left: 2px solid; }
+    .hud-br { bottom: 12px; right: 12px; border-bottom: 2px solid; border-right: 2px solid; }
+
+    .glass {
+      background: linear-gradient(180deg, rgba(26, 21, 40, 0.78), rgba(8, 6, 15, 0.86));
+      border: 1px solid rgba(232, 184, 109, 0.22);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(246, 231, 208, 0.08);
+      backdrop-filter: blur(16px);
+    }
+
+    .cat-card { position: relative; }
+    .cat-card::before,
+    .cat-card::after {
+      content: "";
+      position: absolute;
+      top: -16px;
+      width: 22px;
+      height: 26px;
+      background: linear-gradient(180deg, #E8B86D, #C07A32);
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
+    }
+    .cat-card::before { left: 22px; transform: rotate(-12deg); }
+    .cat-card::after { right: 22px; transform: rotate(12deg); }
+
+    .whisker {
+      height: 18px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='18' viewBox='0 0 140 18'%3E%3Cpath d='M0 9 C18 2, 32 16, 50 9 S82 2, 100 9 122 16, 140 9' fill='none' stroke='%23E0A85A' stroke-width='1.4' stroke-linecap='round' opacity='.55'/%3E%3C/svg%3E");
+      background-repeat: repeat-x;
+      opacity: 0.8;
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 32s linear infinite;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .btn-buy {
+      background: linear-gradient(180deg, #3CFFB8 0%, #14F195 40%, #0BC87A 100%);
+      color: #04140C;
+      box-shadow: 0 0 0 1px rgba(20, 241, 149, 0.5), 0 10px 36px rgba(20, 241, 149, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+    .btn-buy:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+      box-shadow: 0 0 0 1px rgba(20, 241, 149, 0.7), 0 14px 44px rgba(20, 241, 149, 0.42);
+    }
+    .btn-buy:active { transform: translateY(1px); }
+
+    .btn-chart {
+      background: linear-gradient(180deg, rgba(153, 69, 255, 0.28), rgba(153, 69, 255, 0.12));
+      color: #F6E7D0;
+      border: 1px solid rgba(153, 69, 255, 0.65);
+      box-shadow: 0 10px 32px rgba(153, 69, 255, 0.22);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+    .btn-chart:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(180deg, rgba(153, 69, 255, 0.45), rgba(153, 69, 255, 0.2));
+      box-shadow: 0 14px 40px rgba(153, 69, 255, 0.38);
+    }
+
+    .nav-blur {
+      background: rgba(8, 6, 15, 0.72);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(232, 184, 109, 0.12);
+    }
+
+    .social-orb {
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(232, 184, 109, 0.28);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .social-orb:hover {
+      transform: translateY(-3px) scale(1.06);
+      box-shadow: 0 0 22px rgba(46, 230, 255, 0.35);
+    }
+    .social-orb img { width: 100%; height: 100%; object-fit: cover; }
+
+    .ca-bar {
+      background: rgba(8, 6, 15, 0.72);
+      border: 1px solid rgba(46, 230, 255, 0.28);
+      box-shadow: 0 0 24px rgba(46, 230, 255, 0.12), inset 0 0 20px rgba(153, 69, 255, 0.08);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      animation: reveal 0.8s ease forwards;
+    }
+    .reveal-d1 { animation-delay: 0.12s; }
+    .reveal-d2 { animation-delay: 0.24s; }
+    .reveal-d3 { animation-delay: 0.36s; }
+    .reveal-d4 { animation-delay: 0.48s; }
+    @keyframes reveal {
+      to { opacity: 1; transform: none; }
+    }
+
+    .float-paw {
+      position: absolute;
+      opacity: 0.18;
+      animation: drift 11s ease-in-out infinite;
+      pointer-events: none;
+      font-size: 28px;
+    }
+    @keyframes drift {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg); }
+      50% { transform: translate3d(12px, -18px, 0) rotate(8deg); }
+    }
+
+    #toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%) translateY(20px);
+      z-index: 90;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .copy-flash { animation: flash 0.45s ease; }
+    @keyframes flash {
+      0% { box-shadow: 0 0 0 0 rgba(20, 241, 149, 0.0); }
+      40% { box-shadow: 0 0 0 6px rgba(20, 241, 149, 0.28); }
+      100% { box-shadow: 0 0 0 0 rgba(20, 241, 149, 0.0); }
+    }
+
+    iframe { color-scheme: dark; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .logo-orbit, .logo-glow, .visor-bar, .visor-text, .marquee-track, .float-paw, .reveal {
+        animation: none !important;
+      }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body class="grain">
+  <div class="sol-void"></div>
+  <div class="paws"></div>
+
+  <div class="page">
+    <!-- NAV -->
+    <header class="nav-blur sticky top-0 z-50">
+      <div class="visor-bar"></div>
+      <nav class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 md:px-6">
+        <a href="#top" class="flex items-center gap-2.5">
+          <img src="logo.png" alt="mogcat logo" class="h-11 w-11 rounded-full object-cover ring-2 ring-ginger-400/70 shadow-visor" />
+          <div class="leading-none">
+            <p class="font-display text-2xl tracking-wide gold-text">MOGCAT</p>
+            <p class="font-mono text-[10px] uppercase tracking-[0.28em] text-visor-cyan/80">$mogcat</p>
+          </div>
+        </a>
+
+        <div class="hidden items-center gap-8 text-sm font-medium text-cream/80 md:flex">
+          <a href="#story" class="hover:text-ginger-400 transition">Story</a>
+          <a href="#buy" class="hover:text-ginger-400 transition">How to Buy</a>
+          <a href="#chart" class="hover:text-ginger-400 transition">Chart</a>
+          <a href="#community" class="hover:text-ginger-400 transition">Community</a>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a href="https://t.me/mogcatpump" target="_blank" rel="noopener noreferrer" class="social-orb hidden sm:block" aria-label="Telegram">
+            <img src="tg.png" alt="Telegram" />
+          </a>
+          <a href="https://x.com/mogcatpump" target="_blank" rel="noopener noreferrer" class="social-orb hidden sm:block" aria-label="X">
+            <img src="x.png" alt="X" />
+          </a>
+          <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA" target="_blank" rel="noopener noreferrer" class="btn-buy rounded-full px-4 py-2 text-sm font-extrabold uppercase tracking-wider sm:px-5">
+            Buy Now
+          </a>
+          <button id="menuBtn" class="md:hidden rounded-full border border-ginger-400/30 p-2 text-cream" aria-label="Open menu">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+          </button>
+        </div>
+      </nav>
+      <div id="mobileMenu" class="hidden border-t border-ginger-400/10 bg-void/95 px-4 py-4 md:hidden">
+        <div class="flex flex-col gap-3 text-cream/90">
+          <a href="#story" class="py-1">Story</a>
+          <a href="#buy" class="py-1">How to Buy</a>
+          <a href="#chart" class="py-1">Chart</a>
+          <a href="#community" class="py-1">Community</a>
+          <div class="flex gap-3 pt-2">
+            <a href="https://t.me/mogcatpump" target="_blank" rel="noopener noreferrer" class="social-orb" aria-label="Telegram"><img src="tg.png" alt="Telegram" /></a>
+            <a href="https://x.com/mogcatpump" target="_blank" rel="noopener noreferrer" class="social-orb" aria-label="X"><img src="x.png" alt="X" /></a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section id="top" class="relative min-h-[100svh] overflow-hidden">
+      <img src="banner.png" alt="mogcat sitting over a neon city" class="absolute inset-0 h-full w-full object-cover object-center" />
+      <div class="absolute inset-0 bg-gradient-to-b from-void/35 via-void/55 to-void"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-void/50 via-transparent to-void/50"></div>
+
+      <span class="float-paw" style="top:18%;left:8%">🐾</span>
+      <span class="float-paw" style="top:28%;right:10%;animation-delay:1.6s">🐾</span>
+      <span class="float-paw" style="bottom:22%;left:14%;animation-delay:3s">🐾</span>
+
+      <div class="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col items-center justify-center px-4 pb-16 pt-10 text-center">
+        <div class="relative mb-7 h-44 w-44 sm:h-56 sm:w-56">
+          <div class="logo-orbit three"></div>
+          <div class="logo-orbit two"></div>
+          <div class="logo-orbit"></div>
+          <img src="logo.png" alt="mogcat" class="logo-glow relative z-10 h-full w-full rounded-full object-cover ring-2 ring-visor-cyan/60" />
+        </div>
+
+        <p class="reveal font-mono text-[11px] uppercase tracking-[0.48em] text-visor-cyan">Solana · Epoch 0001 · $mogcat</p>
+        <h1 class="reveal reveal-d1 font-display mt-2 text-[18vw] leading-[0.85] tracking-wide gold-text sm:text-8xl md:text-9xl">MOGCAT</h1>
+        <p class="reveal reveal-d2 mx-auto mt-4 max-w-2xl font-epoch text-base italic leading-relaxed text-cream/90 sm:text-xl">
+          A thousand epochs ago it was just a funny experiment.<br class="hidden sm:block" />
+          A thousand epochs from now everyone will pretend it was always obvious.
+        </p>
+
+        <div class="reveal reveal-d3 mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA" target="_blank" rel="noopener noreferrer" class="btn-buy inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-base font-extrabold uppercase tracking-widest">
+            Buy Now
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="https://dexscreener.com/solana/TBA" target="_blank" rel="noopener noreferrer" class="btn-chart inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-base font-extrabold uppercase tracking-widest">
+            Chart
+          </a>
+        </div>
+
+        <div class="reveal reveal-d4 ca-bar mt-8 flex w-full max-w-xl items-center gap-2 rounded-full px-3 py-2 sm:px-4">
+          <span class="shrink-0 rounded-full bg-sol-purple/25 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-visor-cyan">CA</span>
+          <code id="caText" class="min-w-0 flex-1 truncate text-left font-mono text-xs text-cream sm:text-sm">TBA</code>
+          <button id="copyBtn" type="button" class="shrink-0 rounded-full bg-ginger-500/20 px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ginger-400 ring-1 ring-ginger-400/40 hover:bg-ginger-500/30">
+            Copy
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TICKER -->
+    <div class="visor-bar"></div>
+    <div class="overflow-hidden border-y border-ginger-400/10 bg-void-800/80 py-3">
+      <div class="marquee-track font-display text-2xl tracking-[0.2em] text-ginger-400/90">
+        <span class="px-6">$MOGCAT</span><span class="text-visor-cyan">✦</span>
+        <span class="px-6">THE INEVITABLE CAT</span><span class="text-sol-green">✦</span>
+        <span class="px-6">A THOUSAND EPOCHS</span><span class="text-visor-magenta">✦</span>
+        <span class="px-6">SOLANA</span><span class="text-sol-purple">✦</span>
+        <span class="px-6">FUNNY EXPERIMENT</span><span class="text-visor-cyan">✦</span>
+        <span class="px-6">ALWAYS OBVIOUS</span><span class="text-sol-green">✦</span>
+        <span class="px-6">$MOGCAT</span><span class="text-visor-cyan">✦</span>
+        <span class="px-6">THE INEVITABLE CAT</span><span class="text-sol-green">✦</span>
+        <span class="px-6">A THOUSAND EPOCHS</span><span class="text-visor-magenta">✦</span>
+        <span class="px-6">SOLANA</span><span class="text-sol-purple">✦</span>
+        <span class="px-6">FUNNY EXPERIMENT</span><span class="text-visor-cyan">✦</span>
+        <span class="px-6">ALWAYS OBVIOUS</span><span class="text-sol-green">✦</span>
+      </div>
+    </div>
+
+    <!-- STORY / EPOCHS -->
+    <section id="story" class="relative mx-auto max-w-6xl px-4 py-20 md:py-28">
+      <div class="mb-12 text-center">
+        <p class="font-mono text-[11px] uppercase tracking-[0.4em] text-visor-cyan">The archive</p>
+        <h2 class="font-display mt-2 text-5xl gold-text sm:text-6xl">A Cat Across Epochs</h2>
+        <div class="whisker mx-auto mt-5 max-w-md"></div>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-3">
+        <article class="glass cat-card rounded-3xl p-6 pt-8">
+          <p class="font-mono text-[10px] uppercase tracking-[0.32em] text-visor-magenta">Epoch −1000</p>
+          <h3 class="font-display mt-2 text-3xl text-ginger-400">The Experiment</h3>
+          <p class="mt-3 text-sm leading-relaxed text-cream/80">A ginger cat put on a visor for a laugh. No thesis. No roadmap. Just whiskers, neon, and a joke that refused to sit still.</p>
+        </article>
+        <article class="glass cat-card rounded-3xl p-6 pt-8 ring-1 ring-sol-green/30">
+          <p class="font-mono text-[10px] uppercase tracking-[0.32em] text-sol-green">Epoch 0 · Now</p>
+          <h3 class="font-display mt-2 text-3xl visor-text">The Mog</h3>
+          <p class="mt-3 text-sm leading-relaxed text-cream/80">$mogcat lands on Solana. Same cat. Same visor. Same smirk. The city behind him is already being built in real time.</p>
+        </article>
+        <article class="glass cat-card rounded-3xl p-6 pt-8">
+          <p class="font-mono text-[10px] uppercase tracking-[0.32em] text-sol-purple">Epoch +1000</p>
+          <h3 class="font-display mt-2 text-3xl text-ginger-400">The Obvious</h3>
+          <p class="mt-3 text-sm leading-relaxed text-cream/80">Everyone will swear they saw it coming. They didn't. You did. That's the whole point of an epoch — it rewrites the past.</p>
+        </article>
+      </div>
+
+      <blockquote class="glass relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-3xl px-8 py-10 text-center">
+        <div class="hud-corner hud-tl"></div>
+        <div class="hud-corner hud-tr"></div>
+        <div class="hud-corner hud-bl"></div>
+        <div class="hud-corner hud-br"></div>
+        <p class="font-epoch text-lg italic leading-relaxed text-cream sm:text-2xl">
+          “A thousand epochs ago it was just a funny experiment.<br />
+          A thousand epochs from now everyone will pretend it was always obvious.”
+        </p>
+        <p class="mt-5 font-mono text-[11px] uppercase tracking-[0.35em] text-ginger-400">— mogcat manifesto</p>
+      </blockquote>
+
+      <div class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div class="glass rounded-2xl px-4 py-5 text-center">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-cream/50">Name</p>
+          <p class="font-display mt-1 text-2xl text-ginger-400">mogcat</p>
+        </div>
+        <div class="glass rounded-2xl px-4 py-5 text-center">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-cream/50">Symbol</p>
+          <p class="font-display mt-1 text-2xl text-ginger-400">mogcat</p>
+        </div>
+        <div class="glass rounded-2xl px-4 py-5 text-center">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-cream/50">Chain</p>
+          <p class="font-display mt-1 text-2xl text-sol-green">Solana</p>
+        </div>
+        <div class="glass rounded-2xl px-4 py-5 text-center">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-cream/50">CA</p>
+          <p class="font-display mt-1 text-2xl text-visor-cyan">TBA</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW TO BUY -->
+    <section id="buy" class="relative mx-auto max-w-6xl px-4 pb-20 md:pb-28">
+      <div class="mb-12 text-center">
+        <p class="font-mono text-[11px] uppercase tracking-[0.4em] text-visor-cyan">Four rites</p>
+        <h2 class="font-display mt-2 text-5xl gold-text sm:text-6xl">How to Buy</h2>
+        <p class="mx-auto mt-3 max-w-xl text-cream/70">Enter the epoch in four steps. Wallet, SOL, swap, $mogcat. That's the whole ritual.</p>
+        <div class="whisker mx-auto mt-5 max-w-md"></div>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2">
+        <article class="glass cat-card rounded-3xl p-6 pt-9">
+          <div class="mb-4 flex items-center gap-3">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-visor-cyan/15 font-display text-2xl text-visor-cyan ring-1 ring-visor-cyan/40">01</span>
+            <h3 class="font-display text-3xl text-ginger-400">Get a Solana Wallet</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-cream/80">Install <strong class="text-cream">Phantom</strong> or <strong class="text-cream">Solflare</strong> on mobile or as a browser extension. Create a wallet, write down the seed phrase, and never share it. This is your key to the cat.</p>
+        </article>
+
+        <article class="glass cat-card rounded-3xl p-6 pt-9">
+          <div class="mb-4 flex items-center gap-3">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-sol-purple/20 font-display text-2xl text-sol-purple ring-1 ring-sol-purple/40">02</span>
+            <h3 class="font-display text-3xl text-ginger-400">Fill It With SOL</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-cream/80">Buy <strong class="text-cream">SOL</strong> on any exchange, then send it to your wallet address. Keep a little extra SOL for network fees so the swap doesn't stall mid-mog.</p>
+        </article>
+
+        <article class="glass cat-card rounded-3xl p-6 pt-9">
+          <div class="mb-4 flex items-center gap-3">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-visor-magenta/15 font-display text-2xl text-visor-magenta ring-1 ring-visor-magenta/40">03</span>
+            <h3 class="font-display text-3xl text-ginger-400">Open the Swap</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-cream/80">Hit <strong class="text-cream">Buy Now</strong> to open PumpSwap with SOL as input and $mogcat as output. Paste the contract if you ever need to verify — copy the CA above.</p>
+        </article>
+
+        <article class="glass cat-card rounded-3xl p-6 pt-9">
+          <div class="mb-4 flex items-center gap-3">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-sol-green/15 font-display text-2xl text-sol-green ring-1 ring-sol-green/40">04</span>
+            <h3 class="font-display text-3xl text-ginger-400">Swap for $mogcat</h3>
+          </div>
+          <p class="text-sm leading-relaxed text-cream/80">Connect the wallet, choose how much SOL to swap, confirm the transaction, and receive <strong class="text-cream">$mogcat</strong>. Then sit on the roof of the future like it was always obvious.</p>
+        </article>
+      </div>
+
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA" target="_blank" rel="noopener noreferrer" class="btn-buy inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-base font-extrabold uppercase tracking-widest">Buy Now</a>
+        <button type="button" id="copyBtn2" class="rounded-full border border-ginger-400/40 bg-ginger-500/10 px-6 py-3.5 font-extrabold uppercase tracking-widest text-ginger-400 hover:bg-ginger-500/20">Copy CA</button>
+      </div>
+    </section>
+
+    <!-- CHART -->
+    <section id="chart" class="relative mx-auto max-w-6xl px-4 pb-20 md:pb-28">
+      <div class="mb-10 text-center">
+        <p class="font-mono text-[11px] uppercase tracking-[0.4em] text-visor-cyan">Live feed</p>
+        <h2 class="font-display mt-2 text-5xl gold-text sm:text-6xl">The Chart</h2>
+        <p class="mx-auto mt-3 max-w-xl text-cream/70">Watch the inevitable unfold. Dexscreener, dark theme, $mogcat on Solana.</p>
+        <div class="whisker mx-auto mt-5 max-w-md"></div>
+      </div>
+
+      <div class="glass relative overflow-hidden rounded-3xl p-2 sm:p-3">
+        <div class="hud-corner hud-tl"></div>
+        <div class="hud-corner hud-tr"></div>
+        <div class="hud-corner hud-bl"></div>
+        <div class="hud-corner hud-br"></div>
+        <div class="overflow-hidden rounded-2xl">
+          <iframe
+            title="mogcat Dexscreener chart"
+            class="h-[460px] w-full md:h-[620px]"
+            src="https://dexscreener.com/solana/TBA?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"
+            allow="clipboard-write"
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="mt-5 flex justify-center">
+        <a href="https://dexscreener.com/solana/TBA" target="_blank" rel="noopener noreferrer" class="btn-chart inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-extrabold uppercase tracking-widest">
+          Open Dexscreener
+        </a>
+      </div>
+    </section>
+
+    <!-- COMMUNITY -->
+    <section id="community" class="relative mx-auto max-w-6xl px-4 pb-20 md:pb-28">
+      <div class="mb-12 text-center">
+        <p class="font-mono text-[11px] uppercase tracking-[0.4em] text-visor-cyan">The pride</p>
+        <h2 class="font-display mt-2 text-5xl gold-text sm:text-6xl">Community</h2>
+        <p class="mx-auto mt-3 max-w-xl text-cream/70">Come sit on the roof. Telegram for the chat. X for the mog.</p>
+        <div class="whisker mx-auto mt-5 max-w-md"></div>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2">
+        <a href="https://t.me/mogcatpump" target="_blank" rel="noopener noreferrer" class="glass group flex items-center gap-5 rounded-3xl p-6 transition hover:-translate-y-1 hover:ring-1 hover:ring-visor-cyan/40">
+          <img src="tg.png" alt="Telegram" class="h-16 w-16 rounded-full ring-2 ring-visor-cyan/30" />
+          <div>
+            <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-visor-cyan">Telegram</p>
+            <h3 class="font-display text-3xl text-ginger-400">t.me/mogcatpump</h3>
+            <p class="text-sm text-cream/70">Join the epoch in real time.</p>
+          </div>
+        </a>
+        <a href="https://x.com/mogcatpump" target="_blank" rel="noopener noreferrer" class="glass group flex items-center gap-5 rounded-3xl p-6 transition hover:-translate-y-1 hover:ring-1 hover:ring-ginger-400/40">
+          <img src="x.png" alt="X" class="h-16 w-16 rounded-full ring-2 ring-ginger-400/30" />
+          <div>
+            <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-ginger-400">X / Twitter</p>
+            <h3 class="font-display text-3xl text-ginger-400">@mogcatpump</h3>
+            <p class="text-sm text-cream/70">Signal from the visor.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-ginger-400/10">
+      <div class="visor-bar"></div>
+      <div class="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-10 text-center">
+        <img src="logo.png" alt="mogcat" class="h-16 w-16 rounded-full object-cover ring-2 ring-ginger-400/50" />
+        <p class="font-display text-4xl gold-text">MOGCAT</p>
+        <p class="font-epoch max-w-xl text-sm italic text-cream/70">A thousand epochs from now everyone will pretend it was always obvious.</p>
+        <div class="ca-bar flex w-full max-w-lg items-center gap-2 rounded-full px-3 py-2">
+          <span class="shrink-0 rounded-full bg-sol-purple/25 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-visor-cyan">CA</span>
+          <code class="min-w-0 flex-1 truncate text-left font-mono text-xs text-cream">TBA</code>
+          <button type="button" id="copyBtn3" class="shrink-0 rounded-full bg-ginger-500/20 px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ginger-400 ring-1 ring-ginger-400/40 hover:bg-ginger-500/30">Copy</button>
+        </div>
+        <div class="flex gap-3">
+          <a href="https://t.me/mogcatpump" target="_blank" rel="noopener noreferrer" class="social-orb" aria-label="Telegram"><img src="tg.png" alt="Telegram" /></a>
+          <a href="https://x.com/mogcatpump" target="_blank" rel="noopener noreferrer" class="social-orb" aria-label="X"><img src="x.png" alt="X" /></a>
+        </div>
+        <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-cream/40">$mogcat · Solana · Not financial advice · Memes only</p>
+      </div>
+    </footer>
+  </div>
+
+  <div id="toast" class="rounded-full bg-sol-green px-5 py-2 font-extrabold uppercase tracking-widest text-void shadow-buy">CA copied</div>
+
+  <script>
+    (function () {
+      const CA = "TBA";
+      const toast = document.getElementById("toast");
+      const menuBtn = document.getElementById("menuBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+
+      async function copyCA(btn) {
+        try {
+          await navigator.clipboard.writeText(CA);
+        } catch {
+          const ta = document.createElement("textarea");
+          ta.value = CA;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+        }
+        toast.classList.add("show");
+        if (btn) {
+          const prev = btn.textContent;
+          btn.textContent = "Copied";
+          btn.classList.add("copy-flash");
+          setTimeout(function () {
+            btn.textContent = prev;
+            btn.classList.remove("copy-flash");
+          }, 1400);
+        }
+        setTimeout(function () { toast.classList.remove("show"); }, 1800);
+      }
+
+      ["copyBtn", "copyBtn2", "copyBtn3"].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("click", function () { copyCA(el); });
+      });
+
+      if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener("click", function () {
+          mobileMenu.classList.toggle("hidden");
+        });
+        mobileMenu.querySelectorAll("a").forEach(function (a) {
+          a.addEventListener("click", function () { mobileMenu.classList.add("hidden"); });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
